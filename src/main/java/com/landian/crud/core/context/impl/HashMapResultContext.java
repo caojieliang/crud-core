@@ -12,13 +12,13 @@ import java.util.*;
  * HashMap结果集
  */
 public class HashMapResultContext implements ResultContext {
-	public HashMapResultContext(List<HashMap<String, Object>> resultList) {
+	public HashMapResultContext(List<Map<String, Object>> resultList) {
 		if(CollectionUtils.isNotEmpty(resultList)){
 			if(resultList.size() > 1){
 				this.resultCount = resultList.size();
 			}else{
 				//处理空条情况
-				HashMap<String, Object> hashMap = resultList.get(0);
+				Map<String, Object> hashMap = resultList.get(0);
 				if(null != hashMap){
 					this.resultCount = 1;
 				}
@@ -30,14 +30,14 @@ public class HashMapResultContext implements ResultContext {
 	/**
 	 * 结果集
 	 */
-	private List<HashMap<String, Object>> resultList;
+	private List<Map<String, Object>> resultList;
 	/**
 	 * 条数
 	 */
 	private int resultCount = 0;
 	
 	@Override
-	public List<HashMap<String, Object>> getResultObject() {
+	public List<Map<String, Object>> getResultObject() {
 		return resultList;
 	}
 	@Override
@@ -52,7 +52,7 @@ public class HashMapResultContext implements ResultContext {
 	public List singleList() {
 		List<Object> dataList = new ArrayList<Object>();
 		if(!CollectionUtils.isEmpty(resultList)){
-			for(HashMap<String, Object> dataMap : resultList){
+			for(Map<String, Object> dataMap : resultList){
 				if(null != dataMap){
 					Iterator<Object> iterator = dataMap.values().iterator();
 					if(iterator.hasNext()){
@@ -112,10 +112,10 @@ public class HashMapResultContext implements ResultContext {
 	 */
 	public static <K, V>
 	Map<K,V> asMap(String key, String value, HashMapResultContext hashMapResultContext) {
-		List<HashMap<String, Object>> resultList = hashMapResultContext.getResultObject();
+		List<Map<String, Object>> resultList = hashMapResultContext.getResultObject();
 		Map<K,V> asMap = new HashMap<K,V>();
 		if(!CollectionUtils.isEmpty(resultList)){
-			for(HashMap<String, Object> dataMap : resultList){
+			for(Map<String, Object> dataMap : resultList){
 				if(null != dataMap){
 					K keyObject = (K) dataMap.get(key);
 					V valueObject = (V) dataMap.get(value);

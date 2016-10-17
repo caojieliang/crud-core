@@ -1,7 +1,7 @@
 package com.landian.crud.core.dao;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Administrator on 2016/10/7.
@@ -42,7 +42,7 @@ public interface ProxyDao {
      * @param sql
      * @return
      */
-    List<HashMap<String,Object>> doFind(String sql);
+    List<Map<String,Object>> doFind(String sql);
 
     /**
      * 查询数据集
@@ -51,7 +51,7 @@ public interface ProxyDao {
      * @param pageSize 查询几条
      * @return
      */
-    List<HashMap<String,Object>> doFindPage(String sql, int start, int pageSize);
+    List<Map<String,Object>> doFindPage(String sql, int start, int pageSize);
 
     /**
      *

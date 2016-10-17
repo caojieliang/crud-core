@@ -1,7 +1,7 @@
 package com.landian.crud.core.context;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -9,7 +9,7 @@ import java.util.List;
  * 结果集接口
  */
 public interface ResultContext{
-	List<HashMap<String, Object>> getResultObject();
+	List<Map<String, Object>> getResultObject();
 	
 	int getResultCount();
 }

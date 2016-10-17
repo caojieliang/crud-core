@@ -31,7 +31,7 @@ public class ConventionConverter implements ResultContextConverter {
 
 
 	@Override
-	public Object convert(HashMap<String, Object> dataMap) {
+	public Object convert(Map<String, Object> dataMap) {
 		Map propertyMap = columnMap2PropertyMap(dataMap, beanClass);
 		Object object = BeanToMapUtils.toBean(beanClass, propertyMap);
 		return object;
@@ -43,7 +43,7 @@ public class ConventionConverter implements ResultContextConverter {
 	 * @param beanClass
 	 * @return
 	 */
-	private Map<String,Object> columnMap2PropertyMap(HashMap<String, Object> dataMap,Class beanClass) {
+	private Map<String,Object> columnMap2PropertyMap(Map<String, Object> dataMap,Class beanClass) {
 		Map<String, ResultMappingVirtual> resultMappingMap = ResultMapContext.getResultMappingMap(beanClass);
 		Collection<ResultMappingVirtual> resultMappingCollection = resultMappingMap.values();
 		Map<String,Object> propertyMap = new HashMap<String,Object>();

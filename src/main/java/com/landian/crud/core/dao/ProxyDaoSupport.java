@@ -195,7 +195,7 @@ public class ProxyDaoSupport<T> {
 	 */
 	public HashMapResultContext doFind(String sql){
 		proxyInfo(sql);
-		List<HashMap<String, Object>> resultContext = proxyDao.doFind(sql);
+		List<Map<String, Object>> resultContext = proxyDao.doFind(sql);
 		HashMapResultContext hashMapResultContext = new HashMapResultContext(resultContext);
 		return hashMapResultContext;
 	}
@@ -219,11 +219,11 @@ public class ProxyDaoSupport<T> {
 	 */
 	public List<T> doFindPage(String sql, int start, int pageSize,  ResultContextConverter converter){
 		//结果集
-		List<HashMap<String, Object>> resultList = proxyDao.doFindPage(sql, start, pageSize);
+		List<Map<String, Object>> resultList = proxyDao.doFindPage(sql, start, pageSize);
 		//处理结果集
 		List<T> beanList = new ArrayList<T>();
 		if(CollectionUtils.isNotEmpty(resultList)){
-			for(HashMap<String, Object> dataMap : resultList){
+			for(Map<String, Object> dataMap : resultList){
 				@SuppressWarnings("unchecked")
 				T bean = (T) converter.convert(dataMap);
 				beanList.add(bean);
@@ -241,9 +241,9 @@ public class ProxyDaoSupport<T> {
 		HashMapResultContext hashMapResultContext = this.doFind(sql);
 		//处理结果集
 		List<T> beanList = new ArrayList<T>();
-		List<HashMap<String, Object>> resultList = hashMapResultContext.getResultObject();
+		List<Map<String, Object>> resultList = hashMapResultContext.getResultObject();
 		if(CollectionUtils.isNotEmpty(resultList)){
-			for(HashMap<String, Object> dataMap : resultList){
+			for(Map<String, Object> dataMap : resultList){
 				@SuppressWarnings("unchecked")
 				T bean = (T) converter.convert(dataMap);
 				beanList.add(bean);

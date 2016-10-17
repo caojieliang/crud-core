@@ -1,6 +1,6 @@
 package com.landian.crud.core.converter;
 
-import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -8,5 +8,5 @@ import java.util.HashMap;
  * 感觉目前的转换器实现有点暴力，尚且能用，有待进化
  */
 public interface ResultContextConverter{
-	Object convert(HashMap<String, Object> dataMap);
+	Object convert(Map<String, Object> dataMap);
 }

@@ -4,7 +4,7 @@ import com.landian.crud.core.converter.ResultContextConverter;
 import com.landian.sql.jpa.utils.BeanToMapUtils;
 
 import java.util.HashMap;
-
+import java.util.Map;
 
 
 /**
@@ -26,7 +26,7 @@ public class JavaBeanConverter implements ResultContextConverter {
 
 
 	@Override
-	public Object convert(HashMap<String, Object> dataMap) {
+	public Object convert(Map<String, Object> dataMap) {
 		Object object = BeanToMapUtils.toBean(beanClass, dataMap);
 		return object;
 	}

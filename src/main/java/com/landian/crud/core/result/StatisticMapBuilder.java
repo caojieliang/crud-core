@@ -7,8 +7,8 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 
 import java.text.MessageFormat;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  */
@@ -22,7 +22,7 @@ public class StatisticMapBuilder {
         }
         String key = resultMapConfig.getKeyField();
         String value = resultMapConfig.getValueField();
-        List<HashMap<String, Object>> resultList = hashMapResultContext.getResultObject();
+        List<Map<String, Object>> resultList = hashMapResultContext.getResultObject();
         JavaType javaType = checkKeyType(key, hashMapResultContext);
         if(null == javaType) {
             String errorMsg = "not support type for value : " + key;
@@ -36,7 +36,7 @@ public class StatisticMapBuilder {
             return StatisticMap.EMPTY_MAP;
         }
         StatisticMap statisticMap = StatisticMap.newInstance();
-        for(HashMap<String, Object> dataMap : resultList){
+        for(Map<String, Object> dataMap : resultList){
             if(null != dataMap){
                 Long keyValue;
                 if(javaType == JavaType.INT){
@@ -55,8 +55,8 @@ public class StatisticMapBuilder {
     }
 
     private static JavaType checkKeyType(String key, HashMapResultContext hashMapResultContext) {
-        List<HashMap<String, Object>> resultList = hashMapResultContext.getResultObject();
-        HashMap<String, Object> dataMap = resultList.get(0);
+        List<Map<String, Object>> resultList = hashMapResultContext.getResultObject();
+        Map<String, Object> dataMap = resultList.get(0);
         Object keyObject = dataMap.get(key);
         if(keyObject instanceof Integer){
             return JavaType.INT;
