@@ -16,9 +16,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class ProxyUpdateSQLBuilder extends SqlBuilder {
+public class UpdateSQLBuilder extends SqlBuilder {
 	
-	private static final Logger logger = Logger.getLogger(ProxyUpdateSQLBuilder.class);
+	private static final Logger logger = Logger.getLogger(UpdateSQLBuilder.class);
 
 	public static final String updateNotNull = "updateNotNull";
 

@@ -13,9 +13,9 @@ import java.text.MessageFormat;
 import java.util.Map;
 
 
-public class ProxyInsertSQLBuilder extends SqlBuilder{
+public class InsertSQLBuilder extends SqlBuilder{
 
-	private static final Logger logger = Logger.getLogger(ProxyInsertSQLBuilder.class);
+	private static final Logger logger = Logger.getLogger(InsertSQLBuilder.class);
 
 	public static String insertSQL(Object bean, BeanContext beanContext){
 		try {

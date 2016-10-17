@@ -15,9 +15,9 @@ import com.landian.crud.core.provider.ProviderHelper;
 import com.landian.crud.core.result.SingleValue;
 import com.landian.crud.core.result.StatisticMap;
 import com.landian.crud.core.result.StatisticMapBuilder;
+import com.landian.crud.core.sql.InsertSQLBuilder;
 import com.landian.crud.core.sql.PageSqlAdapter;
-import com.landian.crud.core.sql.ProxyInsertSQLBuilder;
-import com.landian.crud.core.sql.ProxyUpdateSQLBuilder;
+import com.landian.crud.core.sql.UpdateSQLBuilder;
 import com.landian.sql.builder.SQL;
 import com.landian.sql.jpa.annotation.IdTypePolicy;
 import com.landian.sql.jpa.context.BeanContext;
@@ -41,7 +41,10 @@ import org.springframework.stereotype.Repository;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -97,7 +100,7 @@ public class ProxyDaoSupport<T> {
 	 * @param beanContext
 	 */
 	public int insertWithId(Object bean,BeanContext<T> beanContext){
-		String sql = ProxyInsertSQLBuilder.insertWithIdSQL(bean, beanContext);
+		String sql = InsertSQLBuilder.insertWithIdSQL(bean, beanContext);
 		return proxyDao.doInsertWidthId(sql);
 	}
 
@@ -107,7 +110,7 @@ public class ProxyDaoSupport<T> {
 	 * @param beanContext
 	 */
 	public void insert(Object bean,BeanContext<T> beanContext){
-		String sql = ProxyInsertSQLBuilder.insertSQL(bean, beanContext);
+		String sql = InsertSQLBuilder.insertSQL(bean, beanContext);
 		Object idObject = proxyDao.doInsertAndReturnId(sql);
 		//回填ID
 		refillId(bean, beanContext, idObject);
@@ -153,7 +156,7 @@ public class ProxyDaoSupport<T> {
 	 * @param beanContext
 	 */
 	public int updateNotNull(Object bean, BeanContext<T> beanContext) {
-		String sql = ProxyUpdateSQLBuilder.updateNotNull(bean, beanContext);
+		String sql = UpdateSQLBuilder.updateNotNull(bean, beanContext);
 		return proxyDao.doUpdate(sql);
 	}
 	
