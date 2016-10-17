@@ -51,7 +51,7 @@ public interface ProxyDao {
      * @param pageSize 查询几条
      * @return
      */
-    List<Map<String,Object>> doFindPage(String sql, int start, int pageSize);
+//    List<Map<String,Object>> doFindPage(String sql, int start, int pageSize);
 
     /**
      *

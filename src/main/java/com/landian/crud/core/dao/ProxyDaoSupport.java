@@ -6,6 +6,7 @@ import com.landian.crud.core.builder.SelectBuilder;
 import com.landian.crud.core.builder.SqlBuilder;
 import com.landian.crud.core.builder.impl.*;
 import com.landian.crud.core.context.ResultMapContext;
+import com.landian.crud.core.context.SystemContextFactory;
 import com.landian.crud.core.context.impl.HashMapResultContext;
 import com.landian.crud.core.converter.ResultContextConverter;
 import com.landian.crud.core.converter.ResultContextConverterFactory;
@@ -14,6 +15,7 @@ import com.landian.crud.core.provider.ProviderHelper;
 import com.landian.crud.core.result.SingleValue;
 import com.landian.crud.core.result.StatisticMap;
 import com.landian.crud.core.result.StatisticMapBuilder;
+import com.landian.crud.core.sql.PageSqlAdapter;
 import com.landian.crud.core.sql.ProxyInsertSQLBuilder;
 import com.landian.crud.core.sql.ProxyUpdateSQLBuilder;
 import com.landian.sql.builder.SQL;
@@ -218,8 +220,10 @@ public class ProxyDaoSupport<T> {
 	 * @param converter 结果集转换器
 	 */
 	public List<T> doFindPage(String sql, int start, int pageSize,  ResultContextConverter converter){
+		PageSqlAdapter pageSqlAdapter = SystemContextFactory.getPageSqlAdapter();
+		String pageSQL = pageSqlAdapter.wrapSQL(sql,start,pageSize);
 		//结果集
-		List<Map<String, Object>> resultList = proxyDao.doFindPage(sql, start, pageSize);
+		List<Map<String, Object>> resultList = proxyDao.doFind(pageSQL);
 		//处理结果集
 		List<T> beanList = new ArrayList<T>();
 		if(CollectionUtils.isNotEmpty(resultList)){
@@ -576,7 +580,8 @@ public class ProxyDaoSupport<T> {
 	 * @return
 	 */
 	public List<Long> queryAsLongValue(String sql, int start, int size) {
-		String sqlQ = SQLPageUtils.appendLimit(sql, start, size);
+		PageSqlAdapter pageSqlAdapter = SystemContextFactory.getPageSqlAdapter();
+		String sqlQ = pageSqlAdapter.wrapSQL(sql, start, size);
 		return proxyDao.queryAsLongValue(sqlQ);
 	}
 
@@ -597,7 +602,8 @@ public class ProxyDaoSupport<T> {
 	 * @return
 	 */
 	public List<Integer> queryAsIntValue(String sql, int start, int size) {
-		String sqlQ = SQLPageUtils.appendLimit(sql, start, size);
+		PageSqlAdapter pageSqlAdapter = SystemContextFactory.getPageSqlAdapter();
+		String sqlQ = pageSqlAdapter.wrapSQL(sql, start, size);
 		return proxyDao.queryAsIntValue(sqlQ);
 	}
 }
