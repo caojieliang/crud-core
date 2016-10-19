@@ -15,14 +15,15 @@ import com.landian.crud.core.provider.ProviderHelper;
 import com.landian.crud.core.result.SingleValue;
 import com.landian.crud.core.result.StatisticMap;
 import com.landian.crud.core.result.StatisticMapBuilder;
+import com.landian.crud.core.sql.DeleteSQLBuilder;
 import com.landian.crud.core.sql.InsertSQLBuilder;
 import com.landian.crud.core.sql.PageSqlAdapter;
 import com.landian.crud.core.sql.UpdateSQLBuilder;
-import com.landian.sql.builder.SQL;
 import com.landian.sql.jpa.annotation.IdTypePolicy;
 import com.landian.sql.jpa.context.BeanContext;
 import com.landian.sql.jpa.context.ResultMapConfig;
 import com.landian.sql.jpa.context.ResultMappingVirtual;
+import com.landian.sql.jpa.criterion.Criterion;
 import com.landian.sql.jpa.criterion.CriterionAppender;
 import com.landian.sql.jpa.criterion.FieldAppender;
 import com.landian.sql.jpa.criterion.Restrictions;
@@ -76,7 +77,7 @@ public class ProxyDaoSupport<T> {
 	 * @param beanContext
 	 * @return
 	 */
-	public boolean isExist(long beanId,BeanContext<T> beanContext) {
+	public boolean isExist(long beanId,BeanContext beanContext) {
 		String beanIdColumn = this.getBeanIdColumn(beanContext);
 		CommonSelectSQLBuilder builder = CommonSelectSQLBuilder.getInstance(beanContext.getTableName(),
 				SelectUnitRestrictions.column(beanIdColumn),
@@ -99,7 +100,7 @@ public class ProxyDaoSupport<T> {
 	 * @param bean
 	 * @param beanContext
 	 */
-	public int insertWithId(Object bean,BeanContext<T> beanContext){
+	public int insertWithId(Object bean,BeanContext beanContext){
 		String sql = InsertSQLBuilder.insertWithIdSQL(bean, beanContext);
 		return proxyDao.doInsertWidthId(sql);
 	}
@@ -109,7 +110,7 @@ public class ProxyDaoSupport<T> {
 	 * @param bean
 	 * @param beanContext
 	 */
-	public void insert(Object bean,BeanContext<T> beanContext){
+	public void insert(Object bean,BeanContext beanContext){
 		String sql = InsertSQLBuilder.insertSQL(bean, beanContext);
 		Object idObject = proxyDao.doInsertAndReturnId(sql);
 		//回填ID
@@ -119,7 +120,7 @@ public class ProxyDaoSupport<T> {
 	/**
 	 * 回填业务Bean ID
 	 */
-	private void refillId(Object bean, BeanContext<T> beanContext,Object idObject){
+	private void refillId(Object bean, BeanContext beanContext,Object idObject){
 		try {
 			String idFieldName = beanContext.getIdFieldName();
 			String setMethodName = ProviderHelper.toSetMethodName(idFieldName);
@@ -155,7 +156,7 @@ public class ProxyDaoSupport<T> {
 	 * @param bean
 	 * @param beanContext
 	 */
-	public int updateNotNull(Object bean, BeanContext<T> beanContext) {
+	public int updateNotNull(Object bean, BeanContext beanContext) {
 		String sql = UpdateSQLBuilder.updateNotNull(bean, beanContext);
 		return proxyDao.doUpdate(sql);
 	}
@@ -169,7 +170,7 @@ public class ProxyDaoSupport<T> {
 	 * @throws Exception
 	 */
 	public int update(UpdateUnitAppender updateUnitAppender, CriterionAppender criterionAppender,
-			BeanContext<T> beanContext){
+			BeanContext beanContext){
 		String sql = UpdateSqlBuilder.getInstance(beanContext.getTableName(), updateUnitAppender, criterionAppender).SQL();
 		return proxyDao.doUpdate(sql);
 	}
@@ -264,7 +265,7 @@ public class ProxyDaoSupport<T> {
 	 * @param beanId
 	 * @param beanContext
 	 */
-	public T queryById(int beanId, BeanContext<T> beanContext){
+	public T queryById(int beanId, BeanContext beanContext){
 		Integer id = beanId;
 		return this.queryById(id.longValue(), beanContext);
 	}
@@ -274,7 +275,7 @@ public class ProxyDaoSupport<T> {
 	 * @param beanId
 	 * @param beanContext
 	 */
-	public T queryById(long beanId,BeanContext<T> beanContext){
+	public T queryById(long beanId,BeanContext beanContext){
 		List<Long> ids = new ArrayList<Long>();
 		ids.add(beanId);
 		List<T> list = this.queryByIds(ids,beanContext);
@@ -289,7 +290,7 @@ public class ProxyDaoSupport<T> {
 	 * @param beanContext
 	 * @param ids
 	 */
-	public List<T> queryByIds(BeanContext<T> beanContext,List<Integer> ids){
+	public List<T> queryByIds(BeanContext beanContext,List<Integer> ids){
 		if(CollectionUtils.isEmpty(ids)){
 			return Collections.EMPTY_LIST;
 		}
@@ -301,7 +302,7 @@ public class ProxyDaoSupport<T> {
 	 * @param ids
 	 * @param beanContext
 	 */
-	public List<T> queryByIds(List<Long> ids,BeanContext<T> beanContext){
+	public List<T> queryByIds(List<Long> ids,BeanContext beanContext){
 		if(CollectionUtils.isEmpty(ids)){
 			return Collections.EMPTY_LIST;
 		}
@@ -317,7 +318,7 @@ public class ProxyDaoSupport<T> {
 	 * 查询Bean全部对像
 	 * @param beanContext
 	 */
-	public List<T> queryBeanAll(BeanContext<T> beanContext) {
+	public List<T> queryBeanAll(BeanContext beanContext) {
 		return queryBean(beanContext,null,null);
 	}
 	
@@ -326,7 +327,7 @@ public class ProxyDaoSupport<T> {
 	 * @param beanContext
 	 * @param criterionAppender
 	 */
-	public List<T> queryBean(BeanContext<T> beanContext,CriterionAppender criterionAppender) {
+	public List<T> queryBean(BeanContext beanContext,CriterionAppender criterionAppender) {
 		return queryBean(beanContext,criterionAppender,null);
 	}
 	
@@ -335,7 +336,7 @@ public class ProxyDaoSupport<T> {
 	 * @param beanContext
 	 * @param proxyOrderAppender
 	 */
-	public List<T> queryBean(BeanContext<T> beanContext,OrderAppender proxyOrderAppender) {
+	public List<T> queryBean(BeanContext beanContext,OrderAppender proxyOrderAppender) {
 		return queryBean(beanContext,null,proxyOrderAppender);
 	}
 	
@@ -345,7 +346,7 @@ public class ProxyDaoSupport<T> {
 	 * @param criterionAppender
 	 * @param proxyOrderAppender
 	 */
-	public List<T> queryBean(BeanContext<T> beanContext,CriterionAppender criterionAppender,
+	public List<T> queryBean(BeanContext beanContext,CriterionAppender criterionAppender,
 			OrderAppender proxyOrderAppender) {
 		String tableName = beanContext.getTableName();
 		//选择器
@@ -365,7 +366,7 @@ public class ProxyDaoSupport<T> {
 	 * @param criterionAppender
 	 * @param proxyOrderAppender
 	 */
-	public List<T> queryBeanField(BeanContext<T> beanContext,FieldAppender fieldAppender, CriterionAppender criterionAppender,
+	public List<T> queryBeanField(BeanContext beanContext,FieldAppender fieldAppender, CriterionAppender criterionAppender,
 			OrderAppender proxyOrderAppender) {
 		String tableName = beanContext.getTableName();
 		//选择器
@@ -412,7 +413,7 @@ public class ProxyDaoSupport<T> {
 	 * @param pageRequest
 	 * @return
 	 */
-	public PageListSupport<T> queryBeanPage(BeanContext<T> beanContext,
+	public PageListSupport<T> queryBeanPage(BeanContext beanContext,
 			CriterionAppender criterionAppender,OrderAppender proxyOrderAppender,PageRequest pageRequest) {
 		String tableName = beanContext.getTableName();
 		//选择器
@@ -462,7 +463,7 @@ public class ProxyDaoSupport<T> {
 	 * @param beanContext
 	 * @return
 	 */
-	public String getBeanIdColumn(BeanContext<T> beanContext){
+	public String getBeanIdColumn(BeanContext beanContext){
 		String idFieldName = beanContext.getIdFieldName();
 		Map<String, ResultMappingVirtual> resultMappingMap = ResultMapContext.getResultMappingMap(beanContext.getBeanClass());
 		String columnName = resultMappingMap.get(idFieldName).getColumn();
@@ -477,12 +478,47 @@ public class ProxyDaoSupport<T> {
 	 * @param beanContext
 	 * @return
 	 */
-	public int deleteById(long beanId, BeanContext<T> beanContext) {
-		String idColumn = getBeanIdColumn(beanContext);
-		SQL sql = new SQL();
-		sql.DELETE_FROM(beanContext.getTableName());
-		sql.WHERE(idColumn + " = " + beanId);
-		return proxyDao.doDelete(sql.toString());
+	public int deleteById(long beanId, BeanContext beanContext) {
+		Criterion criterion = buildIdCriterion(beanId, beanContext);
+		String sql = DeleteSQLBuilder.buildDeleteSQL(beanContext.getTableName(), criterion);
+		return doDelete(sql);
+	}
+
+	/**
+	 * 构建ID条件
+	 * @param id
+	 * @param beanContext
+	 * @return
+	 */
+	public Criterion buildIdCriterion(long id, BeanContext beanContext){
+		String beanIdColumn = getBeanIdColumn(beanContext);
+		return Restrictions.eq(beanIdColumn,id);
+	}
+
+	/**
+	 * 构建ID条件
+	 * @param ids
+	 * @param beanContext
+	 * @return
+	 */
+	public Criterion buildIdCriterion(List<Long> ids, BeanContext beanContext){
+		String beanIdColumn = getBeanIdColumn(beanContext);
+		return Restrictions.in(beanIdColumn,ids,0l);
+	}
+
+	/**
+	 * 根据ID批量删除
+	 * @param ids
+	 * @param beanContext
+	 * @return
+	 */
+	public int deleteByIdLong(List<Long> ids,BeanContext beanContext) {
+		if(CollectionUtils.isEmpty(ids)){
+			return 0;
+		}
+		Criterion criterion = buildIdCriterion(ids, beanContext);
+		String sql = DeleteSQLBuilder.buildDeleteSQL(beanContext.getTableName(), criterion);
+		return doDelete(sql);
 	}
 
 	public int doDelete(String sql){
@@ -496,7 +532,7 @@ public class ProxyDaoSupport<T> {
 	 * @param proxyOrderAppender
 	 * @return
 	 */
-	public String getQuerySQL(BeanContext<T> beanContext, CriterionAppender criterionAppender, OrderAppender proxyOrderAppender) {
+	public String getQuerySQL(BeanContext beanContext, CriterionAppender criterionAppender, OrderAppender proxyOrderAppender) {
 		//选择器
 		SelectBuilder selectBuilder = SelectBuilderFactory.builder(beanContext.getBeanClass());
 		//SQL建造器
@@ -609,4 +645,5 @@ public class ProxyDaoSupport<T> {
 		String sqlQ = pageSqlAdapter.wrapSQL(sql, start, size);
 		return proxyDao.queryAsIntValue(sqlQ);
 	}
+
 }

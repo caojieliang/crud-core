@@ -47,7 +47,7 @@ public class CommonSelectSQLBuilder implements SqlBuilder {
 			CriterionAppender criterionAppender,
 			OrderAppender proxyOrderAppender){
 		SelectUnitAppender selectUnitAppender = SelectUnitAppender.newInstance();
-		selectUnitAppender.addSelectUnit(selectUnit);
+		selectUnitAppender.select(selectUnit);
 		return new CommonSelectSQLBuilder(tableName,selectUnitAppender,criterionAppender,proxyOrderAppender);
 	}
 	
@@ -56,7 +56,7 @@ public class CommonSelectSQLBuilder implements SqlBuilder {
 			Criterion criterion,
 			Order proxyOrder){
 		SelectUnitAppender selectUnitAppender = SelectUnitAppender.newInstance();
-		selectUnitAppender.addSelectUnit(selectUnit);
+		selectUnitAppender.select(selectUnit);
 		CriterionAppender criterionAppender = CriterionAppender.newInstance();
 		criterionAppender.add(criterion);
 		OrderAppender proxyOrderAppender = OrderAppender.newInstance();
@@ -75,7 +75,7 @@ public class CommonSelectSQLBuilder implements SqlBuilder {
 			 SelectUnit selectUnit,
 			 CriterionAppender criterionAppender){
 		SelectUnitAppender selectUnitAppender = SelectUnitAppender.newInstance();
-		selectUnitAppender.addSelectUnit(selectUnit);
+		selectUnitAppender.select(selectUnit);
 		OrderAppender proxyOrderAppender = OrderAppender.newInstance();
 		return new CommonSelectSQLBuilder(tableName,selectUnitAppender,criterionAppender,proxyOrderAppender);
 	}
@@ -84,7 +84,7 @@ public class CommonSelectSQLBuilder implements SqlBuilder {
 			Criterion criterion,
 			OrderAppender proxyOrderAppender){
 		SelectUnitAppender selectUnitAppender = SelectUnitAppender.newInstance();
-		selectUnitAppender.addSelectUnit(selectUnit);
+		selectUnitAppender.select(selectUnit);
 		CriterionAppender criterionAppender = CriterionAppender.newInstance();
 		criterionAppender.add(criterion);
 		return new CommonSelectSQLBuilder(tableName,selectUnitAppender,criterionAppender,proxyOrderAppender);

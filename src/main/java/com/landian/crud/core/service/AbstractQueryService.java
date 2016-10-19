@@ -50,7 +50,7 @@ public abstract class AbstractQueryService<T>{
 	/**
 	 * 需要实现获取BeanContext
 	 */
-	public abstract BeanContext<T> getBeanContext();
+	public abstract BeanContext getBeanContext();
 
 	/**
 	 * 尚未对接使用
@@ -82,7 +82,7 @@ public abstract class AbstractQueryService<T>{
 	 * @return
 	 */
 	public boolean isExist(long beanId) {
-		BeanContext<T> beanContext = this.getBeanContext();
+		BeanContext beanContext = this.getBeanContext();
 		return getProxyDaoSupport().isExist(beanId, beanContext);
 	}
 
@@ -514,7 +514,7 @@ public abstract class AbstractQueryService<T>{
 	 */
 	public HashMapResultContext queryBeanInfo(SelectUnitAppender selectUnitAppender,
 		CriterionAppender criterionAppender,OrderAppender proxyOrderAppender){
-		BeanContext<T> beanContext = getBeanContext();
+		BeanContext beanContext = getBeanContext();
 		return getProxyDaoSupport().queryBeanInfo(beanContext.getTableName(), beanContext.getBeanClass(),
 				selectUnitAppender, criterionAppender, proxyOrderAppender);
 	}

@@ -13,6 +13,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -40,7 +41,7 @@ public abstract class AbstractUpdateService<T>{
 	/**
 	 * 需要实现获取BeanContext
 	 */
-	public abstract BeanContext<T> getBeanContext();
+	public abstract BeanContext getBeanContext();
 
 	/**
 	 * 保存业务Bean(含ID)
@@ -94,24 +95,33 @@ public abstract class AbstractUpdateService<T>{
 	}
 
 	/**
-	 * PS:为了兼容ID类型为BigDecimal的情况，注意此处当作整形来用
-	 * 根据业务ID删除对像
-	 * @param beanId
-	 */
-	protected int deleteById(BigDecimal beanId){
-		if(null == beanId){
-			return 0;
-		}
-		return this.deleteById(beanId.longValue());
-	}
-
-	/**
 	 * 根据业务ID删除对像
 	 * @param beanId
 	 * date 15/08/21
 	 */
 	protected int deleteById(long beanId){
 		return getProxyDaoSupport().deleteById(beanId, getBeanContext());
+	}
+
+	/**
+	 * 根据业务ID删除对像
+	 * @param ids
+	 */
+	protected int deleteById(List<Integer> ids){
+		if(CollectionUtils.isEmpty(ids)){
+			return 0;
+		}
+		List<Long> idsLong = new ArrayList<Long>();
+		for (Integer id : ids) {
+			if(null != id){
+				idsLong.add(id.longValue());
+			}
+		}
+		return deleteByIdLong(idsLong);
+	}
+
+	protected int deleteByIdLong(List<Long> ids) {
+		return proxyDaoSupport.deleteByIdLong(ids,getBeanContext());
 	}
 
 	public int doDelete(String sql){
