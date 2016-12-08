@@ -238,8 +238,8 @@ public abstract class AbstractQueryService<T>{
 	 * 查询业务Bean全部对像
 	 * 此方法非元数据表，谨慎使用
 	 */
-	public List<T> queryBeanAll(Order proxyOrder){
-		OrderAppender proxyOrderAppender = OrderAppender.newInstance().add(proxyOrder);
+	public List<T> queryBeanAll(Order... orders){
+		OrderAppender proxyOrderAppender = OrderAppender.newInstance().add(orders);
 		return getProxyDaoSupport().queryBean(getBeanContext(),null,proxyOrderAppender);
 	}
 
