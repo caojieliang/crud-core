@@ -66,6 +66,7 @@ public abstract class AbstractUpdateService<T>{
 	 * @param beanList 业务Bean
 	 * 批量插入，涉及效率问题，具体业务视情况使用
 	 * 后期有待优化为build批量插入数据的SQL
+	 * @url http://www.iteye.com/topic/1135650 例子实现
 	 */
 	public void save(List<T> beanList){
 		if(CollectionUtils.isNotEmpty(beanList)){
@@ -133,8 +134,7 @@ public abstract class AbstractUpdateService<T>{
 	 * @param bean 业务Bean
 	 */
 	public int update(T bean) {
-		getProxyDaoSupport().updateNotNull(bean, getBeanContext());
-		return 1;
+		return getProxyDaoSupport().updateNotNull(bean, getBeanContext());
 	}
 
 	/**

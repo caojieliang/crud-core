@@ -1,5 +1,8 @@
 package com.landian.crud.core.dao;
 
+import com.landian.crud.core.sql.InsertSQL;
+import com.landian.crud.core.sql.UpdateSQL;
+
 import java.util.List;
 import java.util.Map;
 
@@ -17,18 +20,25 @@ public interface ProxyDao {
 
     /**
      * 执行插入数据SQL(含ID)
-     * @param sql
+     * @param insertSQL InsertSQL对象
      * @return
      */
-    int doInsertWidthId(String sql);
+    int doInsertWidthId(InsertSQL insertSQL);
 
     /**
      * 执行插入并返回插入的自增ID值
      * (ID由具体数据库产生)
-     * @param sql
+     * @param insertSQL InsertSQL对象
      * @return
      */
-    Object doInsertAndReturnId(String sql);
+    Object doInsertAndReturnId(InsertSQL insertSQL);
+
+    /**
+     * 执行更新
+     * @param updateSQL
+     * @return
+     */
+    int doUpdate(UpdateSQL updateSQL);
 
     /**
      * 执行更新

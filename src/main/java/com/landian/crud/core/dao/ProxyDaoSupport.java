@@ -15,10 +15,7 @@ import com.landian.crud.core.provider.ProviderHelper;
 import com.landian.crud.core.result.SingleValue;
 import com.landian.crud.core.result.StatisticMap;
 import com.landian.crud.core.result.StatisticMapBuilder;
-import com.landian.crud.core.sql.DeleteSQLBuilder;
-import com.landian.crud.core.sql.InsertSQLBuilder;
-import com.landian.crud.core.sql.PageSqlAdapter;
-import com.landian.crud.core.sql.UpdateSQLBuilder;
+import com.landian.crud.core.sql.*;
 import com.landian.sql.jpa.annotation.IdTypePolicy;
 import com.landian.sql.jpa.context.BeanContext;
 import com.landian.sql.jpa.context.ResultMapConfig;
@@ -101,8 +98,8 @@ public class ProxyDaoSupport<T> {
 	 * @param beanContext
 	 */
 	public int insertWithId(Object bean,BeanContext beanContext){
-		String sql = InsertSQLBuilder.insertWithIdSQL(bean, beanContext);
-		return proxyDao.doInsertWidthId(sql);
+		InsertSQL insertSQL = InsertSQLBuilder.insertWithIdSQL(bean, beanContext);
+		return proxyDao.doInsertWidthId(insertSQL);
 	}
 
 	/**
@@ -111,8 +108,8 @@ public class ProxyDaoSupport<T> {
 	 * @param beanContext
 	 */
 	public void insert(Object bean,BeanContext beanContext){
-		String sql = InsertSQLBuilder.insertSQL(bean, beanContext);
-		Object idObject = proxyDao.doInsertAndReturnId(sql);
+		InsertSQL insertSQL = InsertSQLBuilder.insertSQL(bean, beanContext);
+		Object idObject = proxyDao.doInsertAndReturnId(insertSQL);
 		//回填ID
 		refillId(bean, beanContext, idObject);
 	}
@@ -157,8 +154,8 @@ public class ProxyDaoSupport<T> {
 	 * @param beanContext
 	 */
 	public int updateNotNull(Object bean, BeanContext beanContext) {
-		String sql = UpdateSQLBuilder.updateNotNull(bean, beanContext);
-		return proxyDao.doUpdate(sql);
+		UpdateSQL updateSQL = UpdateSQLBuilder.updateNotNull(bean, beanContext);
+		return proxyDao.doUpdate(updateSQL);
 	}
 	
 	/**
@@ -171,7 +168,7 @@ public class ProxyDaoSupport<T> {
 	 */
 	public int update(UpdateUnitAppender updateUnitAppender, CriterionAppender criterionAppender,
 			BeanContext beanContext){
-		String sql = UpdateSqlBuilder.getInstance(beanContext.getTableName(), updateUnitAppender, criterionAppender).SQL();
+		UpdateSQL sql = UpdateSqlBuilder2.build(beanContext, updateUnitAppender, criterionAppender);
 		return proxyDao.doUpdate(sql);
 	}
 

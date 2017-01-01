@@ -2,6 +2,7 @@ package com.landian.crud.core.sql;
 
 import com.landian.crud.core.context.ResultMapContext;
 import com.landian.crud.core.provider.ProviderHelper;
+import com.landian.sql.builder.SQL;
 import com.landian.sql.builder.SqlBuilder;
 import com.landian.sql.jpa.annotation.IdTypePolicy;
 import com.landian.sql.jpa.context.BeanContext;
@@ -16,14 +17,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class UpdateSQLBuilder extends SqlBuilder {
+public class UpdateSQLBuilder{
 	
 	private static final Logger logger = Logger.getLogger(UpdateSQLBuilder.class);
 
-	public static final String updateNotNull = "updateNotNull";
-
-
-	public static String updateNotNull(Object bean, BeanContext beanContext){
+	public static UpdateSQL updateNotNull(Object bean, BeanContext beanContext){
 		try {
 			Map<String, ResultMappingVirtual> resultMappingMap = ResultMapContext.getResultMappingMap(beanContext.getBeanClass());
 			String idFieldName = beanContext.getIdFieldName();
@@ -33,12 +31,11 @@ public class UpdateSQLBuilder extends SqlBuilder {
                 JieLoggerProxy.error(logger, msg);
                 throw new RuntimeException(msg);
             }
-			BEGIN();
-			UPDATE(beanContext.getTableName());
-			builtUpdate(bean,idFieldName,false);
-			builtWHERE(beanId,resultMappingMap.get(idFieldName).getColumn());
-			String sql = SQL();
-			return sql;
+            SQL sql = new SQL();
+			sql.UPDATE(beanContext.getTableName());
+			List<Object> params = builtUpdate(sql, bean,idFieldName,false);
+			List<Object> whereParams = builtWHERE(sql, beanId,resultMappingMap.get(idFieldName).getColumn());
+			return UpdateSQL.newInstance(beanContext.getIdType(),sql,params, whereParams);
 		} catch (Exception e) {
 			throw new RuntimeException(e.getMessage());
 		}
@@ -60,11 +57,8 @@ public class UpdateSQLBuilder extends SqlBuilder {
 		return beanId;
 	}
 
-	/*由于基本类型存在默认值(不好识别是否为空)，笔者决定在设计实现上不解释基本类型
- *
- * PS:目前验证通过类型String Integer Long Date
- */
-	private static void builtUpdate(Object bean,String idFieldName,boolean updateAll) throws Exception{
+	private static List<Object> builtUpdate(SQL sql, Object bean,String idFieldName,boolean updateAll) throws Exception{
+		List<Object> params = new ArrayList();
 		Object obj = bean;
 		Map<String, ResultMappingVirtual> resultMappingMap = ResultMapContext.getResultMappingMap(bean.getClass());
 		List<Field> fieldList = new ArrayList<Field>();
@@ -76,7 +70,7 @@ public class UpdateSQLBuilder extends SqlBuilder {
 					|| fieldName.equals(idFieldName)){
 				continue;
 			}
-			field.setAccessible(true); //可以访问private
+			field.setAccessible(true); // 可以访问private
 			Object value = field.get(obj);
 			ResultMappingVirtual resultMappingVirtual = resultMappingMap.get(fieldName);
 			if(null == resultMappingVirtual){
@@ -85,18 +79,23 @@ public class UpdateSQLBuilder extends SqlBuilder {
 			}
 			String column = resultMappingVirtual.getColumn();
 			if(null != value){
-				String updateCron = ProviderHelper.buildUpdateCron(field, value);
-				SET(column + " = " + updateCron);
+				sql.SET(column + " = ? ");
+				params.add(value);
 			}else{
 				if(updateAll){
-					SET(column + " = null ");
+					sql.SET(column + " = ? ");
+					params.add(null);
 				}
 			}
 		}
+		return params;
 	}
 
-	private static void builtWHERE(Long beanId,String idColumnName){
-		WHERE(idColumnName + " = " + beanId);
+	private static List<Object> builtWHERE(SQL sql, Long beanId, String idColumnName){
+		List<Object> params = new ArrayList();
+		sql.WHERE(idColumnName + " = ? ");
+		params.add(beanId);
+		return params;
 	}
 
 }

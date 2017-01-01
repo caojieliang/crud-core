@@ -11,7 +11,9 @@ import com.landian.sql.builder.SQL;
 
 /**
  *  UpdateSqlBuilder
+ *  @see com.landian.crud.core.sql.UpdateSQLBuilder
  */
+@Deprecated
 public class UpdateSqlBuilder{
 	
 	public static UpdateSqlBuilder getInstance(String tableName,
