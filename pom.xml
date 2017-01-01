@@ -2,15 +2,15 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.landian.crud</groupId>
 	<artifactId>crud-core</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>1.0.0-RELEASE</version>
 	<packaging>jar</packaging>
 
   	<properties>
 		<junit.version>4.11</junit.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<spring.version>4.3.3.RELEASE</spring.version>
-		<commons.page>1.0.0-SNAPSHOT</commons.page>
-		<sql.jpa>1.0.0-SNAPSHOT</sql.jpa>
+		<commons.page>1.0.0-RELEASE</commons.page>
+		<sql.jpa>1.0.0-RELEASE</sql.jpa>
 		<lombok.version>1.14.4</lombok.version>
 	</properties>
 	
