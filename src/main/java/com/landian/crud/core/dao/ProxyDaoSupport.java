@@ -147,6 +147,10 @@ public class ProxyDaoSupport<T> {
 			throw new RuntimeException(errorMsg);
 		}
 	}
+
+	public void insertBatch(List<T> beanList, BeanContext beanContext) {
+		// ToDo
+	}
 	
 	/**
 	 * 更新对像非空属性值
@@ -642,5 +646,4 @@ public class ProxyDaoSupport<T> {
 		String sqlQ = pageSqlAdapter.wrapSQL(sql, start, size);
 		return proxyDao.queryAsIntValue(sqlQ);
 	}
-
 }
