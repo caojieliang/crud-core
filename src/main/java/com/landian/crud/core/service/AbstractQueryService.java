@@ -9,6 +9,7 @@ import com.landian.sql.jpa.context.BeanContext;
 import com.landian.sql.jpa.criterion.*;
 import com.landian.sql.jpa.order.Order;
 import com.landian.sql.jpa.order.OrderAppender;
+import com.landian.sql.jpa.order.OrderVo;
 import com.landian.sql.jpa.sql.SelectUnit;
 import com.landian.sql.jpa.sql.SelectUnitAppender;
 import com.landian.sql.jpa.sql.SelectUnitRestrictions;
@@ -366,6 +367,19 @@ public abstract class AbstractQueryService<T>{
 	public PageListSupport<T> queryBean(CriterionAppender criterionAppender,PageRequest pageRequest,Order... proxyOrders){
 		OrderAppender proxyOrderAppender = OrderAppender.newInstance().add(proxyOrders);
 		return queryBean(criterionAppender, proxyOrderAppender, pageRequest);
+	}
+
+	/**
+	 * 根据业务Bean 分页对像
+	 * @param criterionAppender 条件追加器
+	 * @param pageRequest 分页信息
+	 * @param orderVos 排序对象
+	 * @return
+	 */
+	public PageListSupport<T> queryBean(CriterionAppender criterionAppender,PageRequest pageRequest,OrderVo... orderVos){
+		Order[] orders = Order.asArray(orderVos);
+		OrderAppender orderAppender = OrderAppender.newInstance().add(orders);
+		return this.queryBean(criterionAppender, orderAppender, pageRequest);
 	}
 
 	/**
