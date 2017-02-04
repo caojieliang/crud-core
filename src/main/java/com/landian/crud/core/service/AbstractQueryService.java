@@ -572,6 +572,16 @@ public abstract class AbstractQueryService<T>{
 
 	/**
 	 * 查询对像单个值
+	 * @param fieldName 业务Bean属性值
+	 * @param id 业务BeanID
+	 * @return
+	 */
+	public SingleValue querySingleValue(String fieldName, String id){
+		return querySingleValue(SelectUnitRestrictions.column(fieldName), id);
+	}
+
+	/**
+	 * 查询对像单个值
 	 * @param selectUnit
 	 * @param id 业务BeanID
 	 * @return
@@ -591,6 +601,31 @@ public abstract class AbstractQueryService<T>{
 		String idFieldName = getBeanContext().getIdFieldName();
 		Criterion eq = Restrictions.eq(idFieldName, id);
 		return querySingleValue(selectUnit, eq);
+	}
+
+	/**
+	 * 查询对像单个值
+	 * @param selectUnit
+	 * @param id 业务BeanID
+	 * @return
+	 */
+	public SingleValue querySingleValue(SelectUnit selectUnit, String id){
+		Criterion eq = buildIdCriterion(id);
+		return querySingleValue(selectUnit, eq);
+	}
+
+	/**
+	 * 构建ID条件
+	 */
+	private Criterion buildIdCriterion(String id) {
+		return getProxyDaoSupport().buildIdCriterion(id,getBeanContext());
+	}
+
+	/**
+	 * 构建ID条件
+	 */
+	private Criterion buildIdCriterion(long id) {
+		return getProxyDaoSupport().buildIdCriterion(id,getBeanContext());
 	}
 
 	/**

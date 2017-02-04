@@ -114,6 +114,15 @@ public abstract class AbstractUpdateService<T>{
 
 	/**
 	 * 根据业务ID删除对像
+	 * @param beanId
+	 * date 15/08/21
+	 */
+	protected int deleteById(String beanId){
+		return getProxyDaoSupport().deleteById(beanId, getBeanContext());
+	}
+
+	/**
+	 * 根据业务ID删除对像
 	 * @param ids
 	 */
 	protected int deleteById(List<Integer> ids){
@@ -354,13 +363,20 @@ public abstract class AbstractUpdateService<T>{
 	 * @param updateUnits 更新单元
 	 * @return
 	 */
+	protected int update(String beanId, UpdateUnit... updateUnits){
+		Criterion eq = getProxyDaoSupport().buildIdCriterion(beanId,getBeanContext());
+		return this.update(eq,updateUnits);
+	}
+
+	/**
+	 * 根据Id更新业务Bean字段值
+	 * @param beanId 业务BeanId
+	 * @param updateUnits 更新单元
+	 * @return
+	 */
 	protected int update(long beanId, UpdateUnit... updateUnits){
-		UpdateUnitAppender updateUnitAppender = UpdateUnitAppender.newInstance()
-				.add(updateUnits);
-		CriterionAppender criterionAppender = CriterionAppender.newInstance();
-		String idColumn = getProxyDaoSupport().getBeanIdColumn(getBeanContext());
-		criterionAppender.add(Restrictions.eq(idColumn, beanId));
-		return this.update(updateUnitAppender, criterionAppender);
+		Criterion eq = getProxyDaoSupport().buildIdCriterion(beanId,getBeanContext());
+		return this.update(eq,updateUnits);
 	}
 
 	/**

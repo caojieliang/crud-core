@@ -486,12 +486,37 @@ public class ProxyDaoSupport<T> {
 	}
 
 	/**
+	 * author jie
+	 * date 15/08/21
+	 * 根据业务BeanID删除业务Bean
+	 * @param beanId
+	 * @param beanContext
+	 * @return
+	 */
+	public int deleteById(String beanId, BeanContext beanContext) {
+		Criterion criterion = buildIdCriterion(beanId, beanContext);
+		String sql = DeleteSQLBuilder.buildDeleteSQL(beanContext.getTableName(), criterion);
+		return doDelete(sql);
+	}
+
+	/**
 	 * 构建ID条件
 	 * @param id
 	 * @param beanContext
 	 * @return
 	 */
 	public Criterion buildIdCriterion(long id, BeanContext beanContext){
+		String beanIdColumn = getBeanIdColumn(beanContext);
+		return Restrictions.eq(beanIdColumn,id);
+	}
+
+	/**
+	 * 构建ID条件
+	 * @param id
+	 * @param beanContext
+	 * @return
+	 */
+	public Criterion buildIdCriterion(String id, BeanContext beanContext){
 		String beanIdColumn = getBeanIdColumn(beanContext);
 		return Restrictions.eq(beanIdColumn,id);
 	}
