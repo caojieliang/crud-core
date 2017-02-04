@@ -14,6 +14,7 @@ import com.landian.sql.jpa.sql.SelectUnit;
 import com.landian.sql.jpa.sql.SelectUnitAppender;
 import com.landian.sql.jpa.sql.SelectUnitRestrictions;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -88,7 +89,7 @@ public abstract class AbstractQueryService<T>{
 	}
 
 	/**
-	 * 根据业务Bean Id查询业务Bean 
+	 * 根据业务Bean Id查询业务Bean
 	 */
 	public T queryById(int beanId){
 		T bean = (T) getProxyDaoSupport().queryById(beanId, getBeanContext());
@@ -101,6 +102,21 @@ public abstract class AbstractQueryService<T>{
 	public T queryById(long beanId){
 		T bean = (T) getProxyDaoSupport().queryById(beanId, getBeanContext());
 		return bean;
+	}
+
+	/**
+	 * 根据业务Bean Id查询业务Bean
+	 */
+	public T queryById(String beanId){
+		if(StringUtils.isBlank(beanId)){
+			return null;
+		}
+		String column = getBeanContext().getIdFieldName();
+		List<T> list = this.queryBy(column, beanId);
+		if(CollectionUtils.isEmpty(list)){
+			return null;
+		}
+		return list.get(0);
 	}
 
 	/**
