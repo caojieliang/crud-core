@@ -159,6 +159,23 @@ public abstract class AbstractQueryService<T>{
 	}
 
 	/**
+	 * 根据业务Bean Ids查询业务Bean列表
+	 */
+	public List<T> queryByIdsString(List<String> beanIds){
+		if(CollectionUtils.isEmpty(beanIds)){
+			return Collections.EMPTY_LIST;
+		}
+		List<T> list = null;
+		try {
+			list = getProxyDaoSupport().queryByIdsString(beanIds,getBeanContext());
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(e.getMessage(), e);
+		}
+		return list;
+	}
+
+	/**
 	 * PS:为了兼容ID类型为BigDecimal的情况，注意此处当作整形来用
 	 */
 	public List<T> queryByIdsBigDecimal(List<BigDecimal> beanIds){

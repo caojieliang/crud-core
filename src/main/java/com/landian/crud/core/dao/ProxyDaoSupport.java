@@ -307,13 +307,27 @@ public class ProxyDaoSupport<T> {
 		if(CollectionUtils.isEmpty(ids)){
 			return Collections.EMPTY_LIST;
 		}
-		CriterionAppender criterionAppender = CriterionAppender.newInstance();
-		String column = beanContext.getIdFieldName();
-		criterionAppender.add(Restrictions.in(column, ids,0l));
+		Criterion criterion = buildIdCriterion(ids, beanContext);
+		CriterionAppender criterionAppender = CriterionAppender.newInstance().add(criterion);
 		List<T> beanList = queryBean(beanContext,criterionAppender);
 		return beanList;
 	}
-	
+
+	/**
+	 * 根据ID列表，查询对像集
+	 * @param ids
+	 * @param beanContext
+	 */
+	public List<T> queryByIdsString(List<String> ids,BeanContext beanContext){
+		if(CollectionUtils.isEmpty(ids)){
+			return Collections.EMPTY_LIST;
+		}
+		Criterion criterion = buildIdCriterionString(ids, beanContext);
+		CriterionAppender criterionAppender = CriterionAppender.newInstance().add(criterion);
+		List<T> beanList = queryBean(beanContext,criterionAppender);
+		return beanList;
+	}
+
 	/**
 	 * 此方法非元数据表，谨慎使用
 	 * 查询Bean全部对像
@@ -530,6 +544,16 @@ public class ProxyDaoSupport<T> {
 	public Criterion buildIdCriterion(List<Long> ids, BeanContext beanContext){
 		String beanIdColumn = getBeanIdColumn(beanContext);
 		return Restrictions.in(beanIdColumn,ids,0l);
+	}
+	/**
+	 * 构建ID条件
+	 * @param ids
+	 * @param beanContext
+	 * @return
+	 */
+	public Criterion buildIdCriterionString(List<String> ids, BeanContext beanContext){
+		String beanIdColumn = getBeanIdColumn(beanContext);
+		return Restrictions.in(beanIdColumn,ids);
 	}
 
 	/**
