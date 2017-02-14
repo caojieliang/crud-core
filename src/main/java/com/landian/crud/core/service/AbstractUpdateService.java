@@ -300,6 +300,18 @@ public abstract class AbstractUpdateService<T>{
 	 * @param beanId 业务BeanId
 	 * @param fieldName 业务Bean的属性
 	 * @param fieldValue 更新值
+	 * @return
+	 */
+	protected int update(String beanId, String fieldName, int fieldValue){
+		UpdateUnit updateUnit = Update.set(fieldName, fieldValue);
+		return this.update(beanId,updateUnit);
+	}
+
+	/**
+	 * 根据Id更新业务Bean字段值
+	 * @param beanId 业务BeanId
+	 * @param fieldName 业务Bean的属性
+	 * @param fieldValue 更新值
 	 */
 	protected int update(long beanId, String fieldName, String fieldValue){
 		UpdateUnit updateUnit = Update.set(fieldName, fieldValue);
