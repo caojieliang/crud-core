@@ -89,6 +89,15 @@ public abstract class AbstractQueryService<T>{
 	}
 
 	/**
+	 * 业务Bean是否存在
+	 * @return
+	 */
+	public boolean isExist(String beanId) {
+		BeanContext beanContext = this.getBeanContext();
+		return getProxyDaoSupport().isExist(beanId, beanContext);
+	}
+
+	/**
 	 * 根据业务Bean Id查询业务Bean
 	 */
 	public T queryById(int beanId){

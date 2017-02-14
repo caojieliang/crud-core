@@ -161,6 +161,15 @@ public abstract class AbstractUpdateService<T>{
 	 */
 	protected int update(Criterion criterion, UpdateUnit... updateUnits) {
 		UpdateUnitAppender updateUnitAppender = UpdateUnitAppender.newInstance().add(updateUnits);
+		return this.update(criterion,updateUnitAppender);
+	}
+
+	/**
+	 * 根据条件更新业务bean字段
+	 * @param updateUnitAppender
+	 * @param criterion
+	 */
+	protected int update(Criterion criterion, UpdateUnitAppender updateUnitAppender) {
 		CriterionAppender criterionAppender = CriterionAppender.newInstance().add(criterion);
 		return getProxyDaoSupport().update(updateUnitAppender, criterionAppender, getBeanContext());
 	}
@@ -376,6 +385,17 @@ public abstract class AbstractUpdateService<T>{
 	protected int update(String beanId, UpdateUnit... updateUnits){
 		Criterion eq = getProxyDaoSupport().buildIdCriterion(beanId,getBeanContext());
 		return this.update(eq,updateUnits);
+	}
+
+	/**
+	 * 根据Id更新业务Bean字段值
+	 * @param beanId 业务BeanId
+	 * @param updateUnitAppender 更新单元容器
+	 * @return
+	 */
+	protected int update(String beanId, UpdateUnitAppender updateUnitAppender){
+		Criterion eq = getProxyDaoSupport().buildIdCriterion(beanId,getBeanContext());
+		return this.update(eq,updateUnitAppender);
 	}
 
 	/**

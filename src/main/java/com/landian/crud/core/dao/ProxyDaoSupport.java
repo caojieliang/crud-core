@@ -69,17 +69,11 @@ public class ProxyDaoSupport<T> {
 	}
 
 	/**
-	 * 指定ID业务Bean是否存在
-	 * @param beanId
-	 * @param beanContext
+	 * 根据指定的CommonSelectSQLBuilder，执行SQL后是否存在数据
+	 * @param builder
 	 * @return
 	 */
-	public boolean isExist(long beanId,BeanContext beanContext) {
-		String beanIdColumn = this.getBeanIdColumn(beanContext);
-		CommonSelectSQLBuilder builder = CommonSelectSQLBuilder.getInstance(beanContext.getTableName(),
-				SelectUnitRestrictions.column(beanIdColumn),
-				Restrictions.eq(beanIdColumn, beanId),
-				Order.asc(beanIdColumn));
+	private boolean isExistData(CommonSelectSQLBuilder builder){
 		HashMapResultContext hashMapResultContext = this.doFind(builder.SQL());
 		if(hashMapResultContext.getResultCount() > 0){
 			return true;
@@ -87,6 +81,41 @@ public class ProxyDaoSupport<T> {
 		return false;
 	}
 
+	/**
+	 * 指定ID业务Bean是否存在
+	 * @param idCriterion
+	 * @param beanContext
+	 * @return
+	 */
+	public boolean isExistId(Criterion idCriterion ,BeanContext beanContext) {
+		String beanIdColumn = this.getBeanIdColumn(beanContext);
+		CommonSelectSQLBuilder builder = CommonSelectSQLBuilder.getInstance(beanContext.getTableName(),
+				SelectUnitRestrictions.column(beanIdColumn),
+				idCriterion,Order.asc(beanIdColumn));
+		return isExistData(builder);
+	}
+
+	/**
+	 * 指定ID业务Bean是否存在
+	 * @param beanId
+	 * @param beanContext
+	 * @return
+	 */
+	public boolean isExist(long beanId,BeanContext beanContext) {
+		Criterion idCriterion = this.buildIdCriterion(beanId, beanContext);
+		return isExistId(idCriterion,beanContext);
+	}
+
+	/**
+	 * 指定ID业务Bean是否存在
+	 * @param beanId
+	 * @param beanContext
+	 * @return
+	 */
+	public boolean isExist(String beanId,BeanContext beanContext) {
+		Criterion idCriterion = this.buildIdCriterion(beanId, beanContext);
+		return isExistId(idCriterion,beanContext);
+	}
 
 	public int doInsert(String sql){
 		return proxyDao.doInsert(sql);
