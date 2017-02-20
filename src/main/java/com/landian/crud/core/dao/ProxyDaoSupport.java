@@ -226,6 +226,18 @@ public class ProxyDaoSupport<T> {
 	}
 
 	/**
+	 * 查询统计(专用于key为String)
+	 * 由于经常需要根据ID(某属性作为key)，统计某属性总计(某属性总计作为Value)
+	 * @param sql
+	 * @param resultMapConfig
+	 * @return
+	 */
+	public Map<String,Integer> queryAsStatisticMapForStringKey(String sql,ResultMapConfig resultMapConfig) {
+		HashMapResultContext hashMapResultContext = doFind(sql);
+		return StatisticMapBuilder.buildStatisticMapForStringKey(resultMapConfig, hashMapResultContext);
+	}
+
+	/**
 	 * 根据SQL查询，返回结果集
 	 * @param sql
 	 */

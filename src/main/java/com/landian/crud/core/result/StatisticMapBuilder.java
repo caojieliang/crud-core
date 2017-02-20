@@ -4,9 +4,11 @@ import com.landian.crud.core.context.impl.HashMapResultContext;
 import com.landian.sql.jpa.context.JavaType;
 import com.landian.sql.jpa.context.ResultMapConfig;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.log4j.Logger;
 
 import java.text.MessageFormat;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +18,28 @@ public class StatisticMapBuilder {
 
     private static final Logger logger = Logger.getLogger(StatisticMapBuilder.class);
 
+    public static Map<String,Integer> buildStatisticMapForStringKey(
+            ResultMapConfig resultMapConfig, HashMapResultContext hashMapResultContext) {
+        if(hashMapResultContext.getResultCount() < 1){
+            return MapUtils.EMPTY_MAP;
+        }
+        List<Map<String, Object>> resultList = hashMapResultContext.getResultObject();
+        if(CollectionUtils.isEmpty(resultList)){
+            return MapUtils.EMPTY_MAP;
+        }
+        String key = resultMapConfig.getKeyField();
+        String value = resultMapConfig.getValueField();
+        Map<String,Integer> statisticMap = new HashMap<String, Integer>();
+        for(Map<String, Object> dataMap : resultList){
+            if(null != dataMap){
+                String keyObject = (String) dataMap.get(key);
+                Object valueObject = dataMap.get(value);
+                SingleValue _value = SingleValue.newInstance(valueObject);
+                statisticMap.put(keyObject,_value.integerValue());
+            }
+        }
+        return statisticMap;
+    }
     public static StatisticMap buildStatisticMap(ResultMapConfig resultMapConfig, HashMapResultContext hashMapResultContext) {
         if(hashMapResultContext.getResultCount() < 1){
             return StatisticMap.EMPTY_MAP;
