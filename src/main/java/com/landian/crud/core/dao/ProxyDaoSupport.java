@@ -586,6 +586,18 @@ public class ProxyDaoSupport<T> {
 		String beanIdColumn = getBeanIdColumn(beanContext);
 		return Restrictions.in(beanIdColumn,ids,0l);
 	}
+
+	/**
+	 * 构建ID条件
+	 * @param ids
+	 * @param beanContext
+	 * @return
+	 */
+	public Criterion buildIdCriterion(BeanContext beanContext,List<String> ids){
+		String beanIdColumn = getBeanIdColumn(beanContext);
+		return Restrictions.in(beanIdColumn,ids,0l);
+	}
+
 	/**
 	 * 构建ID条件
 	 * @param ids
@@ -608,6 +620,21 @@ public class ProxyDaoSupport<T> {
 			return 0;
 		}
 		Criterion criterion = buildIdCriterion(ids, beanContext);
+		String sql = DeleteSQLBuilder.buildDeleteSQL(beanContext.getTableName(), criterion);
+		return doDelete(sql);
+	}
+
+	/**
+	 * 根据ID批量删除
+	 * @param ids
+	 * @param beanContext
+	 * @return
+	 */
+	public int deleteByIdString(List<String> ids,BeanContext beanContext) {
+		if(CollectionUtils.isEmpty(ids)){
+			return 0;
+		}
+		Criterion criterion = buildIdCriterion(beanContext,ids);
 		String sql = DeleteSQLBuilder.buildDeleteSQL(beanContext.getTableName(), criterion);
 		return doDelete(sql);
 	}

@@ -142,6 +142,10 @@ public abstract class AbstractUpdateService<T>{
 		return proxyDaoSupport.deleteByIdLong(ids,getBeanContext());
 	}
 
+	protected int deleteByIdString(List<String> ids) {
+		return proxyDaoSupport.deleteByIdString(ids,getBeanContext());
+	}
+
 	public int doDelete(String sql){
 		return proxyDaoSupport.doDelete(sql);
 	}
