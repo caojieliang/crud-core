@@ -690,6 +690,17 @@ public abstract class AbstractQueryService<T>{
 	}
 
 	/**
+	 * 查询对像单个值
+	 * @param sql
+	 * @return
+	 */
+	public SingleValue querySingleValue(String sql){
+		HashMapResultContext hashMapResultContext = this.getProxyDaoSupport().doFind(sql);
+		Object value = hashMapResultContext.singleResult();
+		return SingleValue.newInstance(value);
+	}
+
+	/**
 	 * 查询为Long值列表
 	 * @param sql
 	 * @return
@@ -737,5 +748,6 @@ public abstract class AbstractQueryService<T>{
 	public String getQuerySQL(CriterionAppender criterionAppender,OrderAppender proxyOrderAppender){
 		return getProxyDaoSupport().getQuerySQL(getBeanContext(), criterionAppender, proxyOrderAppender);
 	}
+
 
 }
