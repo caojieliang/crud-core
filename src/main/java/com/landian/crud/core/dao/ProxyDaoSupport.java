@@ -32,6 +32,7 @@ import com.landian.sql.jpa.sql.SelectUnitRestrictions;
 import com.landian.sql.jpa.sql.UpdateUnitAppender;
 import com.landian.sql.jpa.utils.ConvertUtils;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -549,6 +550,9 @@ public class ProxyDaoSupport<T> {
 	 * @return
 	 */
 	public int deleteById(String beanId, BeanContext beanContext) {
+		if(StringUtils.isBlank(beanId)){
+			return 0;
+		}
 		Criterion criterion = buildIdCriterion(beanId, beanContext);
 		String sql = DeleteSQLBuilder.buildDeleteSQL(beanContext.getTableName(), criterion);
 		return doDelete(sql);
