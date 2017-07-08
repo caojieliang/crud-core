@@ -1,16 +1,24 @@
 package com.landian.crud.core.builder.impl;
 
+import com.landian.crud.core.context.ResultMapContext;
 import com.landian.crud.core.provider.ProviderHelper;
-import com.landian.sql.jpa.annotation.*;
+import com.landian.sql.jpa.annotation.DateCriterion;
+import com.landian.sql.jpa.annotation.DateRangePolicy;
+import com.landian.sql.jpa.annotation.DateTypePolicy;
+import com.landian.sql.jpa.annotation.Transient;
+import com.landian.sql.jpa.context.BeanContext;
+import com.landian.sql.jpa.context.ResultMappingVirtual;
 import com.landian.sql.jpa.criterion.Criterion;
 import com.landian.sql.jpa.criterion.CriterionAppender;
 import com.landian.sql.jpa.criterion.Restrictions;
 import com.landian.sql.jpa.sql.SQLInjectPolicy;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import java.lang.reflect.Field;
 import java.util.Date;
+import java.util.Map;
 
 
 /**
@@ -45,9 +53,19 @@ public class CriterionAppenderBuilder {
 	 * @return
 	 */
 	public static CriterionAppender build(Object searchVo){
+		return build(searchVo,null);
+	}
+
+	public static CriterionAppender build(Object searchVo, BeanContext beanContext){
 		CriterionAppender criterionAppender = CriterionAppender.newInstance();
 		Class clazz = searchVo.getClass();
 		Field[] fields = clazz.getDeclaredFields();
+		Map<String, ResultMappingVirtual> resultMappingMap = MapUtils.EMPTY_MAP;
+		if(null != beanContext){
+			Class beanClazz = beanContext.getBeanClass();
+			resultMappingMap = ResultMapContext.getResultMappingMap(beanClazz);
+		}
+
 		if(null != fields && fields.length > 0){
 			for(Field field : fields){
 				//可以访问private
@@ -61,15 +79,16 @@ public class CriterionAppenderBuilder {
 				try {
 					value = field.get(searchVo);
 				} catch (IllegalAccessException e) {
-					e.printStackTrace();
 					String errorMsg = "构建" + searchVo + "属性" + fieldName + "条件异常！";
-//					JieLoggerProxy.error(logger,errorMsg);
-//					JieLoggerProxy.error(logger, e);
 					logger.error(errorMsg);
 					logger.error(e.getMessage(), e);
 				}
-				if(null != value){ //1.只针对不为空的值建造查询条件
-					Criterion criterion = buildCriterion(field, fieldName, value);
+				if(null != value){ // 1.只针对不为空的值建造查询条件
+					String column = fieldName;
+					if(MapUtils.isNotEmpty(resultMappingMap)){
+						column = resultMappingMap.get(fieldName).getColumn();
+					}
+					Criterion criterion = buildCriterion(field, column, value);
 					if(null != criterion){
 						criterionAppender.add(criterion);
 					}
@@ -80,14 +99,7 @@ public class CriterionAppenderBuilder {
 		return criterionAppender;
 	}
 
-	private static Criterion buildCriterion(Field field,String fieldName,Object value){
-		//2.默认Java字段与数据字段一置
-		String columnName = fieldName;
-		/*3.验证是否存在Column注解修正映射字段*/
-		Column column = field.getAnnotation(Column.class); //Column注解
-		if(null != column){
-			columnName = column.column();
-		}
+	private static Criterion buildCriterion(Field field,String columnName, Object value){
 		//4.只解释构建Integer Long String 类型查询条件
 		Criterion criterion = null;
 		Class fieldType = field.getType();

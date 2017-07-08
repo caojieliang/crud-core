@@ -9,6 +9,7 @@ import com.landian.sql.jpa.sql.Update;
 import com.landian.sql.jpa.sql.UpdateUnit;
 import com.landian.sql.jpa.sql.UpdateUnitAppender;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -99,7 +100,7 @@ public abstract class AbstractUpdateService<T>{
 	 * @param beanId
 	 * date 15/08/21
 	 */
-	protected int deleteById(int beanId){
+	public int deleteById(int beanId){
 		Integer wrapInt = beanId;
 		return this.deleteById(wrapInt.longValue());
 	}
@@ -109,7 +110,7 @@ public abstract class AbstractUpdateService<T>{
 	 * @param beanId
 	 * date 15/08/21
 	 */
-	protected int deleteById(long beanId){
+	public int deleteById(long beanId){
 		return getProxyDaoSupport().deleteById(beanId, getBeanContext());
 	}
 
@@ -118,7 +119,7 @@ public abstract class AbstractUpdateService<T>{
 	 * @param beanId
 	 * date 15/08/21
 	 */
-	protected int deleteById(String beanId){
+	public int deleteById(String beanId){
 		return getProxyDaoSupport().deleteById(beanId, getBeanContext());
 	}
 
@@ -126,7 +127,7 @@ public abstract class AbstractUpdateService<T>{
 	 * 根据业务ID删除对像
 	 * @param ids
 	 */
-	protected int deleteById(List<Integer> ids){
+	public int deleteById(List<Integer> ids){
 		if(CollectionUtils.isEmpty(ids)){
 			return 0;
 		}
@@ -139,11 +140,11 @@ public abstract class AbstractUpdateService<T>{
 		return deleteByIdLong(idsLong);
 	}
 
-	protected int deleteByIdLong(List<Long> ids) {
+	public int deleteByIdLong(List<Long> ids) {
 		return proxyDaoSupport.deleteByIdLong(ids,getBeanContext());
 	}
 
-	protected int deleteByIdString(List<String> ids) {
+	public int deleteByIdString(List<String> ids) {
 		return proxyDaoSupport.deleteByIdString(ids,getBeanContext());
 	}
 
