@@ -191,6 +191,16 @@ public class ProxyDaoSupport<T> {
 		UpdateSQL updateSQL = UpdateSQLBuilder.updateNotNull(bean, beanContext);
 		return proxyDao.doUpdate(updateSQL);
 	}
+
+	/**
+	 * 更新对像非空属性值
+	 * @param bean
+	 * @param beanContext
+	 */
+	public int updateWithNull(Object bean, List<String> ignoreFields, BeanContext beanContext) {
+		UpdateSQL updateSQL = UpdateSQLBuilder.updateWithNull(bean, ignoreFields, beanContext);
+		return proxyDao.doUpdate(updateSQL);
+	}
 	
 	/**
 	 * 更新字段

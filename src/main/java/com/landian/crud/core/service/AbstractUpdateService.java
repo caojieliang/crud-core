@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -156,6 +157,24 @@ public abstract class AbstractUpdateService<T>{
 	 */
 	public int update(T bean) {
 		return getProxyDaoSupport().updateNotNull(bean, getBeanContext());
+	}
+
+	/**
+	 * 更新业务Bean属性，支持空属性值更新
+	 * @param bean 业务Bean
+	 */
+	public int updateWithNull(T bean) {
+		List<String> ignoreFields = Collections.EMPTY_LIST;
+		return updateWithNull(bean,ignoreFields);
+	}
+
+	/**
+	 * 更新业务Bean属性，支持空属性值更新
+	 * @param bean 业务Bean
+	 * @param ignoreFields 忽略的属性
+	 */
+	public int updateWithNull(T bean, List<String> ignoreFields) {
+		return getProxyDaoSupport().updateWithNull(bean,ignoreFields, getBeanContext());
 	}
 
 	/**
