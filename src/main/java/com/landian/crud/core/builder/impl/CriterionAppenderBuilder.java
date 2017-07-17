@@ -56,7 +56,24 @@ public class CriterionAppenderBuilder {
 		return build(searchVo,null);
 	}
 
+	/**
+	 *
+	 * @param searchVo 查询对象
+	 * @param beanContext 映射关系上下文
+	 * @return
+	 */
 	public static CriterionAppender build(Object searchVo, BeanContext beanContext){
+		return build(searchVo, beanContext, true);
+	}
+
+	/**
+	 *
+	 * @param searchVo 查询对象
+	 * @param beanContext 映射关系上下文
+	 * @param fuzzy 字符串是否模糊查询
+	 * @return
+	 */
+	public static CriterionAppender build(Object searchVo, BeanContext beanContext, boolean fuzzy){
 		CriterionAppender criterionAppender = CriterionAppender.newInstance();
 		Class clazz = searchVo.getClass();
 		Field[] fields = clazz.getDeclaredFields();
@@ -88,7 +105,7 @@ public class CriterionAppenderBuilder {
 					if(MapUtils.isNotEmpty(resultMappingMap)){
 						column = resultMappingMap.get(fieldName).getColumn();
 					}
-					Criterion criterion = buildCriterion(field, column, value);
+					Criterion criterion = buildCriterion(field, column, value, fuzzy);
 					if(null != criterion){
 						criterionAppender.add(criterion);
 					}
@@ -99,7 +116,7 @@ public class CriterionAppenderBuilder {
 		return criterionAppender;
 	}
 
-	private static Criterion buildCriterion(Field field,String columnName, Object value){
+	private static Criterion buildCriterion(Field field,String columnName, Object value, boolean fuzzy){
 		//4.只解释构建Integer Long String 类型查询条件
 		Criterion criterion = null;
 		Class fieldType = field.getType();
@@ -114,8 +131,11 @@ public class CriterionAppenderBuilder {
 			//替换掉这些特殊字符可以防止sql注入
 			stringValue = SQLInjectPolicy.transform(stringValue);
 			if(StringUtils.isNotBlank(stringValue)){
-				//字符串默认模糊查询
-				criterion = Restrictions.like(columnName, stringValue.trim());
+				if(fuzzy){ // 字符串模糊查询
+					criterion = Restrictions.like(columnName, stringValue.trim());
+				}else{
+					criterion = Restrictions.eq(columnName, stringValue.trim());
+				}
 			}
 		}else if (fieldType == Date.class) {
 			Date dateVal = (Date) value;
