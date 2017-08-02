@@ -102,7 +102,13 @@ public class CriterionAppenderBuilder {
 				}
 				if(null != value){ // 1.只针对不为空的值建造查询条件
 					String column = fieldName;
-					if(MapUtils.isNotEmpty(resultMappingMap)){
+					Class fieldType = field.getType();
+					if (fieldType == Date.class){ // 日期类型特殊处理
+						DateCriterion dateCriterion = field.getAnnotation(DateCriterion.class);
+						if(null != dateCriterion) {
+							column = dateCriterion.column();
+						}
+					}else if(MapUtils.isNotEmpty(resultMappingMap)){
 						column = resultMappingMap.get(fieldName).getColumn();
 					}
 					Criterion criterion = buildCriterion(field, column, value, fuzzy);
@@ -141,7 +147,6 @@ public class CriterionAppenderBuilder {
 			Date dateVal = (Date) value;
 			DateCriterion dateCriterion = field.getAnnotation(DateCriterion.class);
 			if(null != dateCriterion) {
-				columnName = dateCriterion.column();
 				criterion = buildCriterionDate(dateVal,columnName,dateCriterion);
 			}
 		}
