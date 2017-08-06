@@ -1,8 +1,9 @@
 package com.landian.crud.core.builder.impl;
 
 
+import com.landian.crud.core.builder
+		.SelectBuilder;
 import com.landian.crud.core.builder.SqlBuilder;
-import com.landian.crud.core.builder.SelectBuilder;
 import com.landian.sql.jpa.criterion.CriterionAppender;
 import com.landian.sql.jpa.order.OrderAppender;
 
@@ -14,6 +15,7 @@ import com.landian.sql.jpa.order.OrderAppender;
 public class SqlBuilderFactory {
 
 	/**
+	 * 后期有待对接使用QuerySQLBuilder
 	 * @param tableName
 	 * @param clazz
 	 * @param selectBuilder
@@ -22,7 +24,7 @@ public class SqlBuilderFactory {
 	 * @return
 	 */
 	public static SqlBuilder builder(String tableName, Class clazz, SelectBuilder selectBuilder,
-                                     CriterionAppender criterionAppender, OrderAppender proxyOrderAppender){
+									CriterionAppender criterionAppender, OrderAppender proxyOrderAppender){
 		return SimpleSqlBuilder.newInstance(tableName, clazz,selectBuilder,criterionAppender,proxyOrderAppender);
 	}
 }
