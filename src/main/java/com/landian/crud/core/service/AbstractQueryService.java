@@ -414,6 +414,18 @@ public abstract class AbstractQueryService<T>{
 	/**
 	 * 根据业务Bean 分页对像
 	 * @param criterionAppender 条件追加器
+	 * @param orderVos 排序对象
+	 * @return
+	 */
+	public List<T> queryBean(CriterionAppender criterionAppender,OrderVo... orderVos){
+		Order[] orders = Order.asArray(orderVos);
+		OrderAppender orderAppender = OrderAppender.newInstance().add(orders);
+		return this.queryBean(criterionAppender, orderAppender);
+	}
+
+	/**
+	 * 根据业务Bean 分页对像
+	 * @param criterionAppender 条件追加器
 	 * @param pageRequest 分页信息
 	 * @param orderVos 排序对象
 	 * @return
