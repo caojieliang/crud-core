@@ -2,10 +2,7 @@ package com.landian.crud.core.builder.impl;
 
 import com.landian.crud.core.context.ResultMapContext;
 import com.landian.crud.core.provider.ProviderHelper;
-import com.landian.sql.jpa.annotation.DateCriterion;
-import com.landian.sql.jpa.annotation.DateRangePolicy;
-import com.landian.sql.jpa.annotation.DateTypePolicy;
-import com.landian.sql.jpa.annotation.Transient;
+import com.landian.sql.jpa.annotation.*;
 import com.landian.sql.jpa.context.BeanContext;
 import com.landian.sql.jpa.context.ResultMappingVirtual;
 import com.landian.sql.jpa.criterion.Criterion;
@@ -137,8 +134,13 @@ public class CriterionAppenderBuilder {
 			//替换掉这些特殊字符可以防止sql注入
 			stringValue = SQLInjectPolicy.transform(stringValue);
 			if(StringUtils.isNotBlank(stringValue)){
-				if(fuzzy){ // 字符串模糊查询
-					criterion = Restrictions.like(columnName, stringValue.trim());
+				if(fuzzy){ // 指定模糊查询
+					QueryEqual queryEqual = field.getAnnotation(QueryEqual.class);
+					if(null != queryEqual) { // 如果标记有QueryEqual注解，指定模糊查询无效
+						criterion = Restrictions.eq(columnName, stringValue.trim());
+					}else{
+						criterion = Restrictions.like(columnName, stringValue.trim());
+					}
 				}else{
 					criterion = Restrictions.eq(columnName, stringValue.trim());
 				}
